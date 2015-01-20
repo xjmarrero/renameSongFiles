@@ -1,59 +1,55 @@
 #! /usr/bin/python
 
-import os, re, argparse
-
-
+import os
+import re
+import argparse
 
 class RenameSongs:
-    
     def __init__(self):
         self.directory = ''
         self.suffixToRemove = ''
-        
-    def changeDirectory(self,newDirectory):
-        self.directory = newDirectory
+
+    def change_directory(self, new_directory):
+        self.directory = new_directory
         return self.directory
-    
-    def suffix(self,newSuffix):         
-        self.suffixToRemove = newSuffix
+
+    def suffix(self, new_suffix):
+        self.suffixToRemove = new_suffix
         return self.suffixToRemove
-    
-    def removeSuffix(self):
-        try:            
+
+    def remove_suffix(self):
+        try:
             for root, dirs, filenames in os.walk(self.directory):
- 
+
                 self.suffixToRemove = re.escape(self.suffixToRemove)
-                patFinder1 = re.compile(self.suffixToRemove)                
-                
+                pat_finder1 = re.compile(self.suffixToRemove)
+
                 for filename in filenames:
-                    correctSongName =""
-                    findSuffix = re.search(patFinder1,filename)
-                    if (findSuffix):
-                        print 'Old File Name: %s' % (filename)
+                    correct_song_name = ""
+                    find_suffix = re.search(pat_finder1, filename)
+                    if find_suffix:
+                        print 'Old File Name: %s' % filename
                         filename = os.path.join(root, filename)
-                        correctSongName += filename
-                        subFound = patFinder1.sub('', correctSongName)
-                        os.rename(filename, subFound)
-                        print 'New File Name: %s: ' % (subFound)
+                        correct_song_name += filename
+                        sub_found = pat_finder1.sub('', correct_song_name)
+                        os.rename(filename, sub_found)
+                        print 'New File Name: %s: ' % sub_found
                     else:
                         return 'No files to rename'
-                return 'Successfully renamed all the file(s)'                                      
+                return 'Successfully renamed all the file(s)'
         except IOError:
-            return "The given directory does not exist" 
-
+            return "The given directory does not exist"
 
 
 def main():
     parser = argparse.ArgumentParser(description="An argparse example")
-
     parser.add_argument('word', help='The word you would like to remove (e.g. brandname.)')
     parser.add_argument('directory', help='The directory to take')
     args = parser.parse_args()
-       
+
     a = RenameSongs()
     a.suffix(args.word)
-    a.changeDirectory(args.directory) 
-    print a.removeSuffix()
-     
+    a.change_directory(args.directory)
+    print a.remove_suffix()
 
-if __name__ == '__main__' : main()
+if __name__ == '__main__': main()
